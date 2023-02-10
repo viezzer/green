@@ -11,7 +11,7 @@ import {
 
 import { Loading } from './src/components/Loading';
 import { Routes } from './src/routes';
-import { Home } from './src/screens/Home';
+import { Transactions } from './src/screens/Transactions';
 
 export default function App() {
 
@@ -30,10 +30,9 @@ export default function App() {
 
   return (
     <>
-      <Home />
-      {/* <Routes /> */}
+      {/* <Transactions /> */}
+      <Routes />
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent={true}/>
-      
     </>
   );
 }

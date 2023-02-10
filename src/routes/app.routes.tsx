@@ -2,14 +2,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
-import { Home } from '../screens/Home'
+import { Transactions } from '../screens/Transactions'
 
 export function AppRoutes() {
     return (
         <Navigator screenOptions={{ headerShown: false}}>
             <Screen
-                name="home"
-                component={Home}
+                name="transactions"
+                component={Transactions}
             />
         </Navigator>
     )
