@@ -7,7 +7,7 @@ interface Props {
     amount: number,
 }
 
-export function Transaction({id = '',  title = '', amount = 0}: Props) {
+export function TransactionListItem({id = '',  title = '', amount = 0}: Props) {
     const operator = amount < 0 ? "-" : "+"
     const amountWithoutOperator = Math.abs(amount)
 

@@ -7,7 +7,7 @@ import { api } from '../lib/axios'
 import colors from 'tailwindcss/colors'
 
 import { Loading } from "../components/Loading";
-import { Transaction } from "../components/Transaction";
+import { TransactionListItem } from "../components/TransactionListItem";
 
 type TransactionsProps = Array<{
     id: string;
@@ -112,11 +112,12 @@ export function Transactions() {
                     {transactions &&
                         transactions.map(transaction => {
                             return (
-                                <Transaction
+                                <TransactionListItem
                                     key={transaction.id}
                                     id={transaction.id}
                                     title={transaction.title}
-                                    amount={transaction.amount} />
+                                    amount={transaction.amount} 
+                                />
                             );
                         })
                     }
