@@ -30,7 +30,6 @@ export default function App() {
 
   return (
     <>
-      {/* <Transactions /> */}
       <Routes />
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent={true}/>
     </>

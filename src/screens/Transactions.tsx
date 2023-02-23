@@ -1,5 +1,5 @@
 import { ScrollView, Text, View, Alert, TouchableOpacity } from "react-native"
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useCallback, useState } from 'react'
 import { Feather } from '@expo/vector-icons'
 import { api } from '../lib/axios'
@@ -17,6 +17,7 @@ type TransactionsProps = Array<{
 }>
 
 export function Transactions() {
+    const { navigate } = useNavigation();
     const [loading, setLoading] = useState(true);
     const [transactions, setTransactions] = useState<TransactionsProps | null>(null)
 
@@ -46,11 +47,10 @@ export function Transactions() {
     .toFixed(2)
 
     async function fetchData() {
-        console.log('fetchData foi chamado')
         try {
             setLoading(true)
             const response = await api.get('/transactions')
-            console.log(response.data)
+            // console.log(response.data)
             setTransactions(response.data)
         }catch(error) {
             Alert.alert("Ops", "Não foi possível carregar as transações.");
@@ -61,7 +61,6 @@ export function Transactions() {
     } 
 
     useFocusEffect(useCallback(() => {
-        console.log('useFocusEffect foi chamado')
         fetchData()
     }, []))
 
@@ -73,7 +72,7 @@ export function Transactions() {
             <TouchableOpacity
                 activeOpacity={0.7}
                 className="flex-row h-11 px-4 my-4 border border-green-800 rounded-lg items-center justify-center"
-                // onPress={() => navigate('new')}
+                onPress={ () => navigate('newTransaction') }
             >
                 <Feather 
                     name="dollar-sign"

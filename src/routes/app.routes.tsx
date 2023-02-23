@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 const { Navigator, Screen } = createNativeStackNavigator();
 
 import { Transactions } from '../screens/Transactions'
+import { NewTransaction } from '../screens/NewTransaction'
 
 export function AppRoutes() {
     return (
@@ -10,6 +11,10 @@ export function AppRoutes() {
             <Screen
                 name="transactions"
                 component={Transactions}
+            />
+            <Screen
+                name="newTransaction"
+                component={NewTransaction}
             />
         </Navigator>
     )
