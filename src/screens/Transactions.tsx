@@ -8,6 +8,7 @@ import colors from 'tailwindcss/colors'
 
 import { Loading } from "../components/Loading";
 import { TransactionListItem } from "../components/TransactionListItem";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type TransactionsProps = Array<{
     id: string;
@@ -49,9 +50,10 @@ export function Transactions() {
     async function fetchData() {
         try {
             setLoading(true)
-            const response = await api.get('/transactions')
-            // console.log(response.data)
-            setTransactions(response.data)
+            // const response = await api.get('/transactions')
+            const response = await AsyncStorage.getItem('@transactions')
+            // console.log(response)
+            setTransactions(JSON.parse(response))
         }catch(error) {
             Alert.alert("Ops", "Não foi possível carregar as transações.");
             console.error(error);
@@ -59,6 +61,17 @@ export function Transactions() {
             setLoading(false)
         }
     } 
+
+    async function handleDeleteTransaction(id) {
+        try {
+            let transactionsWithoutDeletedOne = transactions.filter(transaction => transaction.id !== id) //
+            await AsyncStorage.setItem('@transactions', JSON.stringify(transactionsWithoutDeletedOne))
+            fetchData()
+        } catch (error) {
+            console.log(error)
+            Alert.alert("Ops", 'Não foipossível deletar esta transação')
+        }
+    }
 
     useFocusEffect(useCallback(() => {
         fetchData()
@@ -99,10 +112,13 @@ export function Transactions() {
                 
             </View>
 
-            <Text 
-                className="text-[#f7f7f7] text-lg font-extrabold border-b border-[#f7f7f7] pb-2 mt-2 mb-2">
-                Transações
-            </Text>
+            {
+                transactions !==null &&
+                    <Text 
+                        className="text-[#f7f7f7] text-lg font-extrabold border-b border-[#f7f7f7] pb-2 mt-2 mb-2">
+                        Transações 
+                    </Text>
+            }
 
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -112,12 +128,21 @@ export function Transactions() {
                     {transactions &&
                         transactions.map(transaction => {
                             return (
-                                <TransactionListItem
+                                <TouchableOpacity
                                     key={transaction.id}
-                                    id={transaction.id}
-                                    title={transaction.title}
-                                    amount={transaction.amount} 
-                                />
+                                    onLongPress={ () => {
+                                        Alert.alert(`Excluir ${transaction.title}`, "Deseja excluir esta transação?", [
+                                            {text: "Não"},
+                                            {text: "Sim", onPress: () => handleDeleteTransaction(transaction.id)}
+                                        ])
+                                    }}
+                                >
+                                    <TransactionListItem
+                                        id={transaction.id}
+                                        title={transaction.title}
+                                        amount={transaction.amount} 
+                                    />
+                                </TouchableOpacity>
                             );
                         })
                     }

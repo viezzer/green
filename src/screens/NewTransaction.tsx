@@ -4,7 +4,10 @@ import { Feather } from '@expo/vector-icons'
 
 import { BackButton } from "../components/BackButton";
 import colors from "tailwindcss/colors";
-import { api } from "../lib/axios";
+// import { api } from "../lib/axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
+import dayjs from "dayjs";
 
 
 export function NewTransaction() {
@@ -14,15 +17,31 @@ export function NewTransaction() {
     async function handleCreateNewTransaction() {
         try {
             // console.log(title, amount)
-            console.log(title.trim)
             if(title.trim() === "") {
                 return Alert.alert("Ops", 'Informe uma descrição para a transação')
             }
             if(!Number(stringAmount))  {
                 return Alert.alert("Ops", "Informe um valor para a transação")
             }
+
             const amount = Number(stringAmount)
-            await api.post("/transactions", {title, amount})
+            const transaction = {
+                'id': uuid.v4(),
+                'title': title,
+                'amount': amount,
+                'created_at': dayjs().format('DD/MM/YYYY').toString()
+            }
+
+            let transactionsString = await AsyncStorage.getItem('@transactions')
+
+            if(transactionsString) {
+                let parsedtransactions = JSON.parse(transactionsString)
+                parsedtransactions.push(transaction)
+                // console.log(parsedtransactions)
+                await AsyncStorage.setItem('@transactions', JSON.stringify(parsedtransactions))
+            } else {
+                await AsyncStorage.setItem("@transactions", `[${JSON.stringify(transaction)}]`)
+            }
 
             setTitle('')
             setStringAmount('')

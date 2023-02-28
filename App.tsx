@@ -1,4 +1,4 @@
-// import './src/lib/dayjs';
+import './src/lib/dayjs';
 
 import { StatusBar } from 'react-native';
 import { 
@@ -11,7 +11,6 @@ import {
 
 import { Loading } from './src/components/Loading';
 import { Routes } from './src/routes';
-import { Transactions } from './src/screens/Transactions';
 
 export default function App() {
 
