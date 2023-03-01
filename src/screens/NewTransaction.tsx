@@ -1,6 +1,8 @@
-import { ScrollView, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
+import { ScrollView, Text, TextInput, TouchableOpacity, View, Alert, Switch } from "react-native";
 import { useState } from "react";
 import { Feather } from '@expo/vector-icons'
+import clsx from 'clsx'
+
 
 import { BackButton } from "../components/BackButton";
 import colors from "tailwindcss/colors";
@@ -12,11 +14,13 @@ import dayjs from "dayjs";
 
 export function NewTransaction() {
     const [title, setTitle] = useState('')
-    const [stringAmount, setStringAmount] = useState('')
+    const [inputAmount, setinputAmount] = useState('')
+    const [isExpense, setIsExpense] = useState(false);
+    const toggleSwitch = () => setIsExpense(previousState => !previousState);
 
     async function handleCreateNewTransaction() {
         try {
-            const amount = parseFloat(stringAmount.replace(",", "."))
+            const amount = parseFloat(inputAmount.replace(",", "."))
 
             if(title.trim() === "") {
                 return Alert.alert("Ops", 'Informe uma descrição para a transação')
@@ -28,7 +32,7 @@ export function NewTransaction() {
             const transaction = {
                 'id': uuid.v4(),
                 'title': title,
-                'amount': amount,
+                'amount': isExpense? -amount : +amount,
                 'created_at': dayjs().format('DD/MM/YYYY').toString()
             }
 
@@ -44,7 +48,7 @@ export function NewTransaction() {
             }
 
             setTitle('')
-            setStringAmount('')
+            setinputAmount('')
 
             Alert.alert("Nova Transação", "Transação criada com sucesso")
         } catch(error) {
@@ -62,16 +66,31 @@ export function NewTransaction() {
 
                 <BackButton />
 
-                <Text
-                    className="mt-6 text-white font-extrabold text-3xl"
-                >
+                <Text className="mt-6 text-white font-extrabold text-3xl">
                    Nova transação
                 </Text>
+
+                <Text className='font-semibold mt-4 text-white text-base'>
+                    Tipo
+                </Text>
+                <View className="flex-row justify-start items-center">
+                    <Switch
+                        trackColor={{false: '#c0392b', true: '#2ecc71'}}
+                        thumbColor={'#2f3f3f'}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={isExpense}
+                    />
+                    <Text className={clsx("font-semibold text-base  border-b ml-4", {
+                        ["text-minus border-minus"]: isExpense,
+                        ["text-plus border-plus"]: !isExpense
+                    })}>{isExpense ? 'DESPESA':'RECEITA'}</Text>
+                </View>
 
                 <Text
                     className="mt-6 text-white font-semibold text-base"
                 >
-                    Descrição da transação
+                    Descrição
                 </Text>
 
                 <TextInput
@@ -83,19 +102,16 @@ export function NewTransaction() {
                 />
 
                 <Text className='font-semibold mt-4 mb-3 text-white text-base'>
-                    Valor da transação
-                </Text>
-                <Text className='font-regular mb-3 text-white opacity-75'>
-                    Informe um valor negativo para despesa ou um valor positivo para receita
+                    Valor
                 </Text>
 
                 <TextInput
                     className="h-12 pl-4 rounded-lg mt-3 bg-zinc-900 text-white border-2 border-zinc-800 focus:border-green-600"
                     keyboardType='numeric'
-                    placeholder="Receita = 1100 | Despesa = -1100"
+                    placeholder="0.00"
                     placeholderTextColor={colors.zinc[400]}
-                    value={stringAmount}
-                    onChangeText={setStringAmount}
+                    value={inputAmount}
+                    onChangeText={setinputAmount}
                 />
 
                 <TouchableOpacity
