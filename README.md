@@ -1,2 +1,2 @@
 # green
-Mobile app to control money transactions.
+Built with Expo.
