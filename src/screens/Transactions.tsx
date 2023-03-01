@@ -18,6 +18,7 @@ type TransactionsProps = Array<{
 }>
 
 export function Transactions() {
+
     const { navigate } = useNavigation();
     const [loading, setLoading] = useState(true);
     const [transactions, setTransactions] = useState<TransactionsProps | null>(null)
@@ -25,11 +26,13 @@ export function Transactions() {
     const transactionsAmounts = transactions?.map(function(transaction) {
         return transaction.amount
     })
+    // console.log(transactionsAmounts)
 
     const total  = transactionsAmounts?.reduce(function(accumulator, transaction){
         return accumulator + transaction
     }, 0)
     .toFixed(2)
+    // console.log(total)
 
     const income = transactionsAmounts?.filter(function(value) {
         if (value > 0) {return value}
@@ -38,6 +41,7 @@ export function Transactions() {
         return accumulator + value
     }, 0)
     .toFixed(2)
+    // console.log(income)
 
     const expense = Math.abs(transactionsAmounts?.filter(function(value){
         if (value < 0) {return value}
@@ -46,6 +50,7 @@ export function Transactions() {
         return accumulator + value
     }, 0))
     .toFixed(2)
+    // console.log(expense)
 
     async function fetchData() {
         try {
@@ -98,16 +103,16 @@ export function Transactions() {
                 </Text>
             </TouchableOpacity>
             <Text className="text-white text-lg font-extrabold">SALDO ATUAL</Text>
-            <Text className="text-balance text-4xl font-bold tracking-wide">R$ {total}</Text>
+            <Text className="text-balance text-4xl font-bold tracking-wide">R$ {total ? total : '0.00'}</Text>
 
             <View className="flex-row bg-[#fff] p-5  my-5 justify-around w-max rounded-lg">
                 <View className="flex-1 border-r border-zinc-400">
                     <Text className="text-black text-xl font-bold text-center">RECEITAS</Text>
-                    <Text className="text-plus text-xl font-regular tracking-widest text-center">R$ {income}</Text>
+                    <Text className="text-plus text-xl font-regular tracking-widest text-center">R$ {income ? income : '0.00'}</Text>
                 </View>
                 <View className="flex-1 text-center">
                     <Text className="text-black text-xl font-bold text-center">DESPESAS</Text>
-                    <Text className="text-minus text-xl font-regular tracking-widest text-center">R$ {expense}</Text>
+                    <Text className="text-minus text-xl font-regular tracking-widest text-center">R$ {typeof(expense) == 'string' ? expense : '0.00' }</Text>
                 </View>
                 
             </View>

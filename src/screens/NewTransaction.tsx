@@ -16,15 +16,15 @@ export function NewTransaction() {
 
     async function handleCreateNewTransaction() {
         try {
-            // console.log(title, amount)
+            const amount = parseFloat(stringAmount.replace(",", "."))
+
             if(title.trim() === "") {
                 return Alert.alert("Ops", 'Informe uma descrição para a transação')
             }
-            if(!Number(stringAmount))  {
+            if(!amount)  {
                 return Alert.alert("Ops", "Informe um valor para a transação")
             }
 
-            const amount = Number(stringAmount)
             const transaction = {
                 'id': uuid.v4(),
                 'title': title,
