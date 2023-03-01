@@ -54,7 +54,7 @@ export function Transactions() {
 
     async function fetchData() {
         try {
-            setLoading(true)
+            // setLoading(true)
             // const response = await api.get('/transactions')
             const response = await AsyncStorage.getItem('@transactions')
             // console.log(response)
@@ -63,7 +63,7 @@ export function Transactions() {
             Alert.alert("Ops", "Não foi possível carregar as transações.");
             console.error(error);
         } finally {
-            setLoading(false)
+            // setLoading(false)
         }
     } 
 
@@ -82,9 +82,9 @@ export function Transactions() {
         fetchData()
     }, []))
 
-    if(loading) {
-        return <Loading/>
-    }
+    // if(loading) {
+    //     return <Loading/>
+    // }
     return (
         <View className="flex-1 bg-stone-900 px-4 py-12 ">
             <TouchableOpacity
@@ -118,7 +118,7 @@ export function Transactions() {
             </View>
 
             {
-                transactions !==null &&
+                transactions &&
                     <Text 
                         className="text-[#f7f7f7] text-lg font-extrabold border-b border-[#f7f7f7] pb-2 mt-2 mb-2">
                         Transações 
@@ -146,6 +146,7 @@ export function Transactions() {
                                         id={transaction.id}
                                         title={transaction.title}
                                         amount={transaction.amount} 
+                                        created_at={transaction.created_at}
                                     />
                                 </TouchableOpacity>
                             );
